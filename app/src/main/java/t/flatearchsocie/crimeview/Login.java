@@ -2,8 +2,15 @@ package t.flatearchsocie.crimeview;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import java.sql.SQLException;
 
 public class Login extends AppCompatActivity {
+    DatabaseHandler databaseHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,5 +34,25 @@ public class Login extends AppCompatActivity {
             drawerLayout.openDrawer(GravityCompat.START);
             drawerToggle.setHomeAsUpIndicator(R.drawable.ic_new_icon); // set your back icon
         }*/
+
+
+    }
+
+    public void signIn(View view) {
+
+        EditText username = findViewById(R.id.edtLogin);
+        EditText password = findViewById(R.id.edtPassword);
+        databaseHandler = new DatabaseHandler();
+        try {
+            if (databaseHandler.signIn(username.getText().toString(), password.getText().toString())) {
+                Toast.makeText(this, "Successful Login", Toast.LENGTH_LONG).show();
+            } else {
+
+                Log.d("Login Fail", username.getText().toString());
+            }
+        } catch (SQLException e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
     }
 }
