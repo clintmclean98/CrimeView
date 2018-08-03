@@ -20,7 +20,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".ManageCrime" />
-        <activity android:name=".EditProfile"></activity>
+        <activity android:name=".EditProfile" />
+        <activity android:name=".Register" />
+        <activity android:name=".RegisterSuburbs"></activity>
     </application>
 
 </manifest>
