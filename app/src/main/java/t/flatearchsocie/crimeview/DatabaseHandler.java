@@ -9,7 +9,9 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class DatabaseHandler implements Serializable {
 
@@ -52,6 +54,24 @@ public class DatabaseHandler implements Serializable {
             return true;
 
 
+
+    }
+
+    public ArrayList<Crime> getCrimeDetails() throws SQLException {
+
+
+
+        ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM CRIME");
+
+        while (resultSet.next()) {
+            int crimeID = resultSet.getInt("CrimeID");
+
+/*            String moduleName = result.getString("Module_Name");
+            Integer moduleYear = result.getInt("Module_Year");
+            tempLectures = new ArrayList<>();
+            tempModules.add(new Module(moduleCode, moduleName, moduleYear, tempLectures));*/
+        }
+return new ArrayList<Crime>();
 
     }
 
