@@ -7,4 +7,5 @@ public class UserLocation {
         this.userID = userID;
         this.locationID = locationID;
     }
+
 }
