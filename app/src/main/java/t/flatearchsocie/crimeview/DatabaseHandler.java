@@ -11,6 +11,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.util.ArrayList;
 
 public class DatabaseHandler implements Serializable {
@@ -36,23 +37,21 @@ public class DatabaseHandler implements Serializable {
 
     }
 
-    public Boolean signIn(String username, String password) throws SQLException{
+    public Boolean signIn(String username, String password) throws SQLException {
 
 
+        preparedStatement = connection.prepareStatement("SELECT * FROM USERTABlE WHERE USERNAME = ? AND PASSWORD = ?");
 
-            preparedStatement = connection.prepareStatement("SELECT * FROM USERTABlE WHERE USERNAME = ? AND PASSWORD = ?");
+        preparedStatement.setString(1, username);
 
-            preparedStatement.setString(1, username);
-
-            preparedStatement.setString(2, password);
+        preparedStatement.setString(2, password);
 
         /*statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         tempModules = new ArrayList<>();
         ResultSet result = statement.executeQuery("SELECT * FROM Module");*/
 
-            preparedStatement.execute();
-            return true;
-
+        preparedStatement.execute();
+        return true;
 
 
     }
@@ -60,18 +59,29 @@ public class DatabaseHandler implements Serializable {
     public ArrayList<Crime> getCrimeDetails() throws SQLException {
 
 
-
         ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM CRIME");
+        ArrayList<Crime> crimes = new ArrayList<>();
 
         while (resultSet.next()) {
             int crimeID = resultSet.getInt("CrimeID");
+            int categoryID = resultSet.getInt("CategoryID");
+            int locationID = resultSet.getInt("LocationID");
+            int userID = resultSet.getInt("UserID");
+            int verified = resultSet.getInt("Verified");
+            Time time = resultSet.getTime("TimeRecorded");
+            float latitude = resultSet.getFloat("Latitude");
+            float longitude = resultSet.getFloat("Longitude");
+            Boolean bool;
+            if (verified == 0) {
+                bool = false;
+            } else {
+                bool = true;
+            }
+            Crime crime = new Crime(crimeID, categoryID, locationID, userID, bool, time, latitude, longitude);
+            crimes.add(crime);
 
-/*            String moduleName = result.getString("Module_Name");
-            Integer moduleYear = result.getInt("Module_Year");
-            tempLectures = new ArrayList<>();
-            tempModules.add(new Module(moduleCode, moduleName, moduleYear, tempLectures));*/
         }
-return new ArrayList<Crime>();
+        return crimes;
 
     }
 
