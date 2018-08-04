@@ -8,16 +8,16 @@ import java.io.Serializable;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Time;
 import java.util.ArrayList;
 
 public class DatabaseHandler implements Serializable {
 
     private Connection connection;
-    private PreparedStatement preparedStatement;
+    private Statement preparedStatement;
     private CallableStatement storedProcedure;
 
     public DatabaseHandler() {
@@ -40,18 +40,17 @@ public class DatabaseHandler implements Serializable {
     public Boolean signIn(String username, String password) throws SQLException {
 
 
-        preparedStatement = connection.prepareStatement("SELECT * FROM USERTABlE WHERE USERNAME = ? AND PASSWORD = ?");
+        //preparedStatement = connection.prepareStatement("SELECT * FROM USERTABlE WHERE USERNAME = ? AND PASSWORD = ?");
 
-        preparedStatement.setString(1, username);
+        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 
-        preparedStatement.setString(2, password);
+        ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM USERTABLE WHERE USERNAME = '" + username + "' AND PASSWORD = '" + password + "'");
 
-        /*statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        tempModules = new ArrayList<>();
-        ResultSet result = statement.executeQuery("SELECT * FROM Module");*/
-
-        preparedStatement.execute();
-        return true;
+        if (!resultSet.next()) {
+            return false;
+        } else {
+            return true;
+        }
 
 
     }
@@ -59,6 +58,7 @@ public class DatabaseHandler implements Serializable {
     public ArrayList<Crime> getCrimeDetails() throws SQLException {
 
 
+        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM CRIME");
         ArrayList<Crime> crimes = new ArrayList<>();
 
