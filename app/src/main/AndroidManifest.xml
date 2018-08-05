@@ -20,7 +20,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ManageCrime" />
-        <activity android:name=".EditProfile" />
+        <activity android:name=".EditProfile"
+      />/      android:exported="true" />
         <activity android:name=".Register" />
         <activity android:name=".RegisterSuburbs"></activity>
     </application>
