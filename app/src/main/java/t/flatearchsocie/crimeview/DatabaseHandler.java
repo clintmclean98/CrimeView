@@ -16,9 +16,9 @@ import java.util.ArrayList;
 
 public class DatabaseHandler implements Serializable {
 
-    private Connection connection;
-    private Statement preparedStatement;
-    private CallableStatement storedProcedure;
+    private Connection connection= null;
+    private Statement preparedStatement = null;
+    private CallableStatement storedProcedure = null;
 
     public DatabaseHandler() {
 
@@ -34,11 +34,9 @@ public class DatabaseHandler implements Serializable {
         } catch (SQLException e) {
             Log.e("SQL Error", e.getMessage());
         }
-
     }
 
     public Boolean signIn(String username, String password) throws SQLException {
-
 
         //preparedStatement = connection.prepareStatement("SELECT * FROM USERTABlE WHERE USERNAME = ? AND PASSWORD = ?");
 
@@ -51,8 +49,11 @@ public class DatabaseHandler implements Serializable {
         } else {
             return true;
         }
+    }
 
-
+    public Statement getStatement() throws SQLException {
+        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        return preparedStatement ;
     }
 
     public ArrayList<Crime> getCrimeDetails() throws SQLException {
