@@ -1,6 +1,6 @@
 package t.flatearchsocie.crimeview;
 
-public class Category {
+public class  Category {
     private int categoryID, severityIndicator;
     private String categoryName;
 

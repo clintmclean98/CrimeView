@@ -20,10 +20,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".ManageCrime" />
-        <activity android:name=".EditProfile"
-        android:exported="true" />
+        <activity
+            android:name=".EditProfile"
+            android:exported="true" />
         <activity android:name=".Register" />
-        <activity android:name=".RegisterSuburbs"></activity>
+        <activity android:name=".RegisterSuburbs" />
+        <activity android:name=".DeleteCrime"></activity>
     </application>
 
 </manifest>
