@@ -46,10 +46,10 @@ public class Login extends AppCompatActivity {
         databaseHandler = DatabaseHandler.getinstance();
         User user = null;
         try {
-            if (databaseHandler.signIn(username.getText().toString(), password.getText().toString())) {
+            if (databaseHandler.signIn( password.getText().toString() , username.getText().toString())) {
                 Toast.makeText(this, "Successful Login", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(getApplicationContext(), EditProfile.class);
-                //intent.putExtra("user" , username.getText().toString());
+                intent.putExtra("user" , username.getText().toString());
                 startActivity(intent);
 
 

@@ -14,11 +14,13 @@ public class EditProfile extends AppCompatActivity {
     DatabaseHandler databaseHandler;
 
     String username;
+    String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
+
         Intent intent = this.getIntent();
         username = intent.getStringExtra("user");
         EditText txtView = findViewById(R.id.nameChange);
@@ -36,8 +38,8 @@ public class EditProfile extends AppCompatActivity {
         EditText edtTextUsername = findViewById(R.id.nameChange);
         EditText edtTextPassword = findViewById(R.id.surnameChange);
         //Integer UserID = 2;
-        username = edtTextUsername.getText().toString();
-        String password = edtTextPassword.getText().toString();
+       // username = edtTextUsername.getText().toString();
+       password = edtTextPassword.getText().toString();
 
 
         String Name = "Clint";
@@ -46,9 +48,13 @@ public class EditProfile extends AppCompatActivity {
 
         try {
             //Query works
-            //  String sql = " UPDATE UserTable SET Username = '" + Username.toString() + "', Password = '" + Password.toString() + "', Name ='" + Name + "', Surname='" + Surname + "', UserType=1  WHERE UserID = 2 ";
+            // String sql = " UPDATE UserTable SET Username = '" + username + "', Password = '" + password + "', UserType=1  WHERE UserID = 2 ";
+
+            // String sql = " UPDATE UserTable SET Username = '" + username + "', Password = '" + password + "', Name ='" + Name + "', Surname='" + Surname + "', UserType=1  WHERE UserID = 2 ";
             //   String sql = " UPDATE UserTable SET Username = '" + Username + "', Password = '" + Password + "', Name ='" + Name + "', Surname='" + Surname + "', UserType=1  WHERE User
-            if (databaseHandler.editProfile(password)) {
+
+
+            if (databaseHandler.editProfile(password, username)) {
                 Toast.makeText(this, "Update successful", Toast.LENGTH_LONG).show();
             } else {
 

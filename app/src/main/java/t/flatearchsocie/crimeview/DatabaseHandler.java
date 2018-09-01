@@ -3,6 +3,7 @@ package t.flatearchsocie.crimeview;
 
 import android.os.StrictMode;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -35,7 +36,7 @@ public class DatabaseHandler {
         }
     }
 
-    public static DatabaseHandler getinstance(){
+    public static DatabaseHandler getinstance() {
 
         if (databaseHandler == null) {
             databaseHandler = new DatabaseHandler();
@@ -43,7 +44,7 @@ public class DatabaseHandler {
         return databaseHandler;
     }
 
-    public Boolean signIn(String username, String password) throws SQLException {
+    public Boolean signIn(String password,String username) throws SQLException {
 
         //preparedStatement = connection.prepareStatement("SELECT * FROM USERTABlE WHERE USERNAME = ? AND PASSWORD = ?");
 
@@ -51,14 +52,12 @@ public class DatabaseHandler {
 
         ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM USERTABLE WHERE USERNAME = '" + username + "' AND PASSWORD = '" + password + "'");
 
-        if (!resultSet.next()) {
-            return false;
-        } else {
 
+        if(resultSet.next()){
             return true;
         }
+        return false;
     }
-
 
 
     public Statement getStatement() throws SQLException {
@@ -96,19 +95,28 @@ public class DatabaseHandler {
 
     }
 
-    public Boolean editProfile(String password) throws SQLException {
+    public Boolean editProfile(String password, String username) throws SQLException {
 
 
+        // ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM USERTABLE WHERE USERNAME = '" + username + "' AND PASSWORD = '" + password + "'");
+
+        // String sql = " UPDATE UserTable SET Username = '" + username + "', Password = '" + password + "', UserType=1  WHERE UserID = 2 ";
 
         preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 
-        int resultSet = preparedStatement.executeUpdate("UPDATE UserTable SET '" + password + "'  WHERE Username = 'Clint'");
 
-        if (resultSet == 1) {
-            return true;
-        } else {
+
+            int resultSet = preparedStatement.executeUpdate("UPDATE UserTable SET Password = '" + password + "'  WHERE Username = '" + username + "'");
+
+
+        if (resultSet == 0) {
             return false;
         }
+        else {
+            return true;
+        }
+
+
 
     }
 
