@@ -5,7 +5,6 @@ import android.os.StrictMode;
 import android.util.Log;
 
 import java.io.Serializable;
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -14,13 +13,14 @@ import java.sql.Statement;
 import java.sql.Time;
 import java.util.ArrayList;
 
-public class DatabaseHandler implements Serializable {
+public final class DatabaseHandler implements Serializable {
 
-    private Connection connection= null;
+    private static DatabaseHandler databaseHandler;
+    private Connection connection = null;
     private Statement preparedStatement = null;
-    private CallableStatement storedProcedure = null;
+    //private CallableStatement storedProcedure = null;
 
-    public DatabaseHandler() {
+    private DatabaseHandler() {
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -36,6 +36,14 @@ public class DatabaseHandler implements Serializable {
         }
     }
 
+    public static DatabaseHandler getinstance(){
+
+        if (databaseHandler == null) {
+            databaseHandler = new DatabaseHandler();
+        }
+        return databaseHandler;
+    }
+
     public Boolean signIn(String username, String password) throws SQLException {
 
         //preparedStatement = connection.prepareStatement("SELECT * FROM USERTABlE WHERE USERNAME = ? AND PASSWORD = ?");
@@ -47,13 +55,16 @@ public class DatabaseHandler implements Serializable {
         if (!resultSet.next()) {
             return false;
         } else {
+
             return true;
         }
     }
 
+
+
     public Statement getStatement() throws SQLException {
         preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        return preparedStatement ;
+        return preparedStatement;
     }
 
     public ArrayList<Crime> getCrimeDetails() throws SQLException {
@@ -83,6 +94,36 @@ public class DatabaseHandler implements Serializable {
 
         }
         return crimes;
+
+    }
+
+    public Boolean editProfile(String password) throws SQLException {
+
+
+
+        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+
+        int resultSet = preparedStatement.executeUpdate("UPDATE UserTable SET '" + password + "'  WHERE Username = 'Clint'");
+
+        if (resultSet == 1) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    public Boolean usernameExists(String username) throws SQLException {
+
+        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+
+        ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM USERTABLE WHERE USERNAME = '" + username + "' ");
+        if (resultSet.getFetchSize() == 0) {
+            return true;
+        } else {
+            return false;
+        }
+
 
     }
 
