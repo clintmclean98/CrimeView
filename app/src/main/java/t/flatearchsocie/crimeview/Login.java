@@ -1,5 +1,6 @@
 package t.flatearchsocie.crimeview;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -46,6 +47,9 @@ public class Login extends AppCompatActivity {
         try {
             if (databaseHandler.signIn(username.getText().toString(), password.getText().toString())) {
                 Toast.makeText(this, "Successful Login", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(getApplicationContext() , EditProfile.class);
+                intent.putExtra("connection" , databaseHandler);
+
             } else {
 
                 Log.d("Login Fail", username.getText().toString());

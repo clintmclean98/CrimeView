@@ -5,7 +5,6 @@ import android.os.StrictMode;
 import android.util.Log;
 
 import java.io.Serializable;
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -16,9 +15,9 @@ import java.util.ArrayList;
 
 public class DatabaseHandler implements Serializable {
 
-    private Connection connection= null;
+    private Connection connection = null;
     private Statement preparedStatement = null;
-    private CallableStatement storedProcedure = null;
+    //private CallableStatement storedProcedure = null;
 
     public DatabaseHandler() {
 
@@ -53,7 +52,7 @@ public class DatabaseHandler implements Serializable {
 
     public Statement getStatement() throws SQLException {
         preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        return preparedStatement ;
+        return preparedStatement;
     }
 
     public ArrayList<Crime> getCrimeDetails() throws SQLException {
@@ -83,6 +82,36 @@ public class DatabaseHandler implements Serializable {
 
         }
         return crimes;
+
+    }
+
+    public Boolean editProfile(String password) throws SQLException {
+
+
+        String sql = "UPDATE UserTable SET '" + password + "'  WHERE Username = 'Clint'";
+        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+
+        int resultSet = preparedStatement.executeUpdate("UPDATE UserTable SET '" + password + "'  WHERE Username = 'Clint'");
+
+        if (resultSet == 1) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    public Boolean usernameExists(String username) throws SQLException {
+
+        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+
+        ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM USERTABLE WHERE USERNAME = '" + username + "' ");
+        if (resultSet.getFetchSize() == 0) {
+            return true;
+        } else {
+            return false;
+        }
+
 
     }
 
