@@ -1,23 +1,26 @@
 package t.flatearchsocie.crimeview;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 
 public class ManageCrime extends AppCompatActivity {
-
+ DatabaseHandler databaseHandler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_crime);
+        databaseHandler = DatabaseHandler.getinstance();
     }
 
     public void populateCrimes() throws SQLException {
 
-        DatabaseHandler dbDatabaseHandler = new DatabaseHandler();
-        ArrayList crimes = dbDatabaseHandler.getCrimeDetails();
+
+        List<Crime> crimes = databaseHandler.getCrimeDetails();
+
+
 
 
     }

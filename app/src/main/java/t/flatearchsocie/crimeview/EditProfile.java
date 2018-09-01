@@ -36,7 +36,7 @@ public class EditProfile extends AppCompatActivity {
         EditText edtTextUsername = findViewById(R.id.nameChange);
         EditText edtTextPassword = findViewById(R.id.surnameChange);
         //Integer UserID = 2;
-        String username = edtTextUsername.getText().toString();
+        username = edtTextUsername.getText().toString();
         String password = edtTextPassword.getText().toString();
 
 

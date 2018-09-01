@@ -4,7 +4,6 @@ package t.flatearchsocie.crimeview;
 import android.os.StrictMode;
 import android.util.Log;
 
-import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -13,7 +12,7 @@ import java.sql.Statement;
 import java.sql.Time;
 import java.util.ArrayList;
 
-public final class DatabaseHandler implements Serializable {
+public class DatabaseHandler {
 
     private static DatabaseHandler databaseHandler;
     private Connection connection = null;
