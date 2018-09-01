@@ -13,13 +13,14 @@ import java.sql.Statement;
 import java.sql.Time;
 import java.util.ArrayList;
 
-public class DatabaseHandler implements Serializable {
+public final class DatabaseHandler implements Serializable {
 
+    private static DatabaseHandler databaseHandler;
     private Connection connection = null;
     private Statement preparedStatement = null;
     //private CallableStatement storedProcedure = null;
 
-    public DatabaseHandler() {
+    private DatabaseHandler() {
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -35,6 +36,14 @@ public class DatabaseHandler implements Serializable {
         }
     }
 
+    public static DatabaseHandler getinstance(){
+
+        if (databaseHandler == null) {
+            databaseHandler = new DatabaseHandler();
+        }
+        return databaseHandler;
+    }
+
     public Boolean signIn(String username, String password) throws SQLException {
 
         //preparedStatement = connection.prepareStatement("SELECT * FROM USERTABlE WHERE USERNAME = ? AND PASSWORD = ?");
@@ -46,9 +55,12 @@ public class DatabaseHandler implements Serializable {
         if (!resultSet.next()) {
             return false;
         } else {
+
             return true;
         }
     }
+
+
 
     public Statement getStatement() throws SQLException {
         preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -88,7 +100,7 @@ public class DatabaseHandler implements Serializable {
     public Boolean editProfile(String password) throws SQLException {
 
 
-        String sql = "UPDATE UserTable SET '" + password + "'  WHERE Username = 'Clint'";
+
         preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 
         int resultSet = preparedStatement.executeUpdate("UPDATE UserTable SET '" + password + "'  WHERE Username = 'Clint'");

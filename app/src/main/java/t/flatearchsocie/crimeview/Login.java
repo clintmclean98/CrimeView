@@ -43,12 +43,15 @@ public class Login extends AppCompatActivity {
 
         EditText username = findViewById(R.id.edtLogin);
         EditText password = findViewById(R.id.edtPassword);
-        databaseHandler = new DatabaseHandler();
+        databaseHandler = DatabaseHandler.getinstance();
+        User user = null;
         try {
             if (databaseHandler.signIn(username.getText().toString(), password.getText().toString())) {
                 Toast.makeText(this, "Successful Login", Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(getApplicationContext() , EditProfile.class);
-                intent.putExtra("connection" , databaseHandler);
+                Intent intent = new Intent(getApplicationContext(), EditProfile.class);
+                //intent.putExtra("user" , username.getText().toString());
+                startActivity(intent);
+
 
             } else {
 
