@@ -33,6 +33,4 @@ class User {
     public String getSurname() {
         return surname;
     }
-
-
 }
