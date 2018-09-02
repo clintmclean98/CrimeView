@@ -1,8 +1,9 @@
 package t.flatearchsocie.crimeview;
 
+import java.io.Serializable;
 import java.sql.Time;
 
-public class Crime {
+public class Crime implements Serializable {
 
     private int crimeID, categoryID , locationID, userID;
     private Boolean verified;

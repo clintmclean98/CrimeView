@@ -44,7 +44,7 @@ public class DatabaseHandler {
         return databaseHandler;
     }
 
-    public Boolean signIn(String password, String username) throws SQLException {
+    public Boolean signIn(String password,String username) throws SQLException {
 
         //preparedStatement = connection.prepareStatement("SELECT * FROM USERTABlE WHERE USERNAME = ? AND PASSWORD = ?");
 
@@ -52,11 +52,13 @@ public class DatabaseHandler {
 
         ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM USERTABLE WHERE USERNAME = '" + username + "' AND PASSWORD = '" + password + "'");
 
-        if (resultSet.next()) {
+
+        if(resultSet.next()){
             return true;
         }
         return false;
     }
+
 
     public Statement getStatement() throws SQLException {
         preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -101,7 +103,10 @@ public class DatabaseHandler {
         // String sql = " UPDATE UserTable SET Username = '" + username + "', Password = '" + password + "', UserType=1  WHERE UserID = 2 ";
 
         preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+
+
         int resultSet = preparedStatement.executeUpdate("UPDATE UserTable SET Password = '" + password + "'  WHERE Username = '" + username + "'");
+
 
         if (resultSet == 0) {
             return false;
@@ -120,6 +125,61 @@ public class DatabaseHandler {
         } else {
             return false;
         }
+
+
+    }
+
+    public String getCategory(int categoryID) throws SQLException {
+
+        //Check Query
+        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+
+        ResultSet resultSet = preparedStatement.executeQuery("SELECT CATEGORYNAME FROM CATEGORY WHERE CATEGORYID = '" + categoryID + "'");
+
+
+        return resultSet.getString(0);
+
+
+    }
+
+    public String getUser(int userID) throws SQLException {
+
+        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+
+        ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM USERTABLE WHERE USERID = " + userID + "");
+
+        return resultSet.getString("Username");
+
+
+
+    }
+
+    public Crime getCrime(int crimeID) throws SQLException {
+
+        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM CRIME");
+
+        Crime crime = null;
+        while (resultSet.next()) {
+
+            int categoryID = resultSet.getInt("CategoryID");
+            int locationID = resultSet.getInt("LocationID");
+            int userID = resultSet.getInt("UserID");
+            int verified = resultSet.getInt("Verified");
+            Time time = resultSet.getTime("TimeRecorded");
+            float latitude = resultSet.getFloat("Latitude");
+            float longitude = resultSet.getFloat("Longitude");
+            Boolean bool;
+            if (verified == 0) {
+                bool = false;
+            } else {
+                bool = true;
+            }
+            crime = new Crime(crimeID, categoryID, locationID, userID, bool, time, latitude, longitude);
+
+
+        }
+        return crime;
 
 
     }

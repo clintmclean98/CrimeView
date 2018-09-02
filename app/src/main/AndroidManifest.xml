@@ -27,6 +27,9 @@
         <activity android:name=".RegisterSuburbs" />
         <activity android:name=".DeleteCrime" />
         <activity android:name=".BanUser"></activity>
+        <activity android:name=".DeleteCrime" />
+        <activity android:name=".Verify_Delete"></activity>
+
     </application>
 
 </manifest>
