@@ -3,9 +3,9 @@ package t.flatearchsocie.crimeview;
 
 import android.os.StrictMode;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -44,7 +44,7 @@ public class DatabaseHandler {
         return databaseHandler;
     }
 
-    public Boolean signIn(String password,String username) throws SQLException {
+    public Boolean signIn(String password, String username) throws SQLException {
 
         //preparedStatement = connection.prepareStatement("SELECT * FROM USERTABlE WHERE USERNAME = ? AND PASSWORD = ?");
 
@@ -53,7 +53,7 @@ public class DatabaseHandler {
         ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM USERTABLE WHERE USERNAME = '" + username + "' AND PASSWORD = '" + password + "'");
 
 
-        if(resultSet.next()){
+        if (resultSet.next()) {
             return true;
         }
         return false;
@@ -82,12 +82,13 @@ public class DatabaseHandler {
             float latitude = resultSet.getFloat("Latitude");
             float longitude = resultSet.getFloat("Longitude");
             Boolean bool;
+            Date date = resultSet.getDate("DateRecorded");
             if (verified == 0) {
                 bool = false;
             } else {
                 bool = true;
             }
-            Crime crime = new Crime(crimeID, categoryID, locationID, userID, bool, time, latitude, longitude);
+            Crime crime = new Crime(crimeID, categoryID, locationID, userID, bool, time, latitude, longitude, date);
             crimes.add(crime);
 
         }
@@ -131,13 +132,13 @@ public class DatabaseHandler {
 
     public String getCategory(int categoryID) throws SQLException {
 
-        //Check Query
+
         preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 
-        ResultSet resultSet = preparedStatement.executeQuery("SELECT CATEGORYNAME FROM CATEGORY WHERE CATEGORYID = '" + categoryID + "'");
+        ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM CATEGORY WHERE CATEGORYID = " + categoryID + "");
 
-
-        return resultSet.getString(0);
+        resultSet.next();
+        return resultSet.getString("CateName");
 
 
     }
@@ -148,8 +149,8 @@ public class DatabaseHandler {
 
         ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM USERTABLE WHERE USERID = " + userID + "");
 
+        resultSet.next();
         return resultSet.getString("Username");
-
 
 
     }
@@ -170,16 +171,33 @@ public class DatabaseHandler {
             float latitude = resultSet.getFloat("Latitude");
             float longitude = resultSet.getFloat("Longitude");
             Boolean bool;
+            Date date = resultSet.getDate("DateRecorded");
             if (verified == 0) {
                 bool = false;
             } else {
                 bool = true;
             }
-            crime = new Crime(crimeID, categoryID, locationID, userID, bool, time, latitude, longitude);
+            crime = new Crime(crimeID, categoryID, locationID, userID, bool, time, latitude, longitude, date);
 
 
         }
         return crime;
+
+
+    }
+
+    public Boolean verifyCrime(int crimeID) throws SQLException {
+        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+
+
+        int resultSet = preparedStatement.executeUpdate("UPDATE CRIME SET VERIFIED = " + 1 + "  WHERE CRIMEID = " + crimeID + "");
+
+
+        if (resultSet == 0) {
+            return false;
+        } else {
+            return true;
+        }
 
 
     }

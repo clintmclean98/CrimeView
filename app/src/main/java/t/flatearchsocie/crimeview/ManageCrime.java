@@ -18,6 +18,11 @@ public class ManageCrime extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_crime);
         databaseHandler = DatabaseHandler.getinstance();
+        try {
+            populateCrimes();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void populateCrimes() throws SQLException {

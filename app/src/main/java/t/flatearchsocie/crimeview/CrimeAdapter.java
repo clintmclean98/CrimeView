@@ -31,7 +31,7 @@ public class CrimeAdapter extends ArrayAdapter<Crime> {
         // get text views that will hold strings
         TextView txtCategory = personView.findViewById(R.id.txtCrimeCategory);
         TextView txtCrimeUser = personView.findViewById(R.id.txtCrimeUser);
-        TextView txtDateReported = personView.findViewById(R.id.txtDateReported);
+        TextView txtDateReported = personView.findViewById(R.id.txtTimeReported);
 
 
         try {
