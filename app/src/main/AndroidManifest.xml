@@ -25,9 +25,7 @@
             android:exported="true" />
         <activity android:name=".Register" />
         <activity android:name=".RegisterSuburbs" />
-        <activity android:name=".DeleteCrime" />
         <activity android:name=".BanUser"></activity>
-        <activity android:name=".DeleteCrime" />
         <activity android:name=".Verify_Delete"></activity>
 
     </application>
