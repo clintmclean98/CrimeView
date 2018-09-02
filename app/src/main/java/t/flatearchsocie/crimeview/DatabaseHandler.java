@@ -36,6 +36,27 @@ public class DatabaseHandler {
         }
     }
 
+    public Connection getCon() {
+        return connection;
+    }
+
+    public Connection getConnection() {
+//        try {
+//            Class.forName("net.sourceforge.jtds.jdbc.Driver");
+//            String connURL = "jdbc:jtds:sqlserver://openbox.nmmu.ac.za/JN07;instance=WRR";
+//            try {
+//                connection = DriverManager.getConnection(connURL, "JN07User", "u7WVFDBj");
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//            //  Toast.makeText(this, "Could not connect", Toast.LENGTH_LONG).show();
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
+        return connection;
+    }
+
+
     public static DatabaseHandler getinstance() {
 
         if (databaseHandler == null) {
@@ -44,7 +65,7 @@ public class DatabaseHandler {
         return databaseHandler;
     }
 
-    public Boolean signIn(String password,String username) throws SQLException {
+    public Boolean signIn(String password, String username) throws SQLException {
 
         //preparedStatement = connection.prepareStatement("SELECT * FROM USERTABlE WHERE USERNAME = ? AND PASSWORD = ?");
 
@@ -53,7 +74,7 @@ public class DatabaseHandler {
         ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM USERTABLE WHERE USERNAME = '" + username + "' AND PASSWORD = '" + password + "'");
 
 
-        if(resultSet.next()){
+        if (resultSet.next()) {
             return true;
         }
         return false;
@@ -125,8 +146,6 @@ public class DatabaseHandler {
         } else {
             return false;
         }
-
-
     }
 
     public String getCategory(int categoryID) throws SQLException {
@@ -151,8 +170,26 @@ public class DatabaseHandler {
         return resultSet.getString("Username");
 
 
-
     }
+
+//    public User getUserObject(String username) throws SQLException {
+//        String sql = "Select * From UserTable Where Username = '" + username +"'" ;
+//        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+//        ResultSet resultSet = preparedStatement.executeQuery(sql);
+//        int UserID = -1;
+//        String password="";
+//        String Surname="";
+//        int UserType=-1;
+//
+//        while(resultSet.next()){
+//             UserID = resultSet.getInt("UserID");
+//             password = resultSet.getString("Password");
+//             Surname = resultSet.getString("Surname");
+//             UserType = resultSet.getInt("UserType");
+//        }
+//        User curUser = new User(UserID,username,password,Surname,UserType);
+//        return null;
+//    }
 
     public Crime getCrime(int crimeID) throws SQLException {
 
@@ -184,5 +221,8 @@ public class DatabaseHandler {
 
     }
 
+    public void BanUser(){
+      String sql="  INSERT INTO DeletedUser (Name, Surname) SELECT Name, Surname FROM UserTable WHERE UserName = ";
+    }
 
 }

@@ -25,9 +25,11 @@
             android:exported="true" />
         <activity android:name=".Register" />
         <activity android:name=".RegisterSuburbs" />
-        <activity android:name=".BanUser"></activity>
-        <activity android:name=".Verify_Delete"></activity>
-
+        <activity
+            android:name=".BanUser"
+            android:exported="true" />
+        <activity android:name=".Verify_Delete" />
+        <activity android:name=".BanReasons"></activity>
     </application>
 
 </manifest>
