@@ -60,7 +60,7 @@ public class EditProfile extends AppCompatActivity {
 
                 Toast.makeText(this, "Could not update", Toast.LENGTH_LONG).show();
             }
-
+//no
         } catch (Exception e) {
 
             Log.d("Fail", "editProfileSQL: Fail");

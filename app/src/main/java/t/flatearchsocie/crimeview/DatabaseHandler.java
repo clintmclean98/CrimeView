@@ -44,7 +44,7 @@ public class DatabaseHandler {
         return databaseHandler;
     }
 
-    public Boolean signIn(String password,String username) throws SQLException {
+    public Boolean signIn(String password, String username) throws SQLException {
 
         //preparedStatement = connection.prepareStatement("SELECT * FROM USERTABlE WHERE USERNAME = ? AND PASSWORD = ?");
 
@@ -52,13 +52,11 @@ public class DatabaseHandler {
 
         ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM USERTABLE WHERE USERNAME = '" + username + "' AND PASSWORD = '" + password + "'");
 
-
-        if(resultSet.next()){
+        if (resultSet.next()) {
             return true;
         }
         return false;
     }
-
 
     public Statement getStatement() throws SQLException {
         preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -103,21 +101,13 @@ public class DatabaseHandler {
         // String sql = " UPDATE UserTable SET Username = '" + username + "', Password = '" + password + "', UserType=1  WHERE UserID = 2 ";
 
         preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-
-
-
-            int resultSet = preparedStatement.executeUpdate("UPDATE UserTable SET Password = '" + password + "'  WHERE Username = '" + username + "'");
-
+        int resultSet = preparedStatement.executeUpdate("UPDATE UserTable SET Password = '" + password + "'  WHERE Username = '" + username + "'");
 
         if (resultSet == 0) {
             return false;
-        }
-        else {
+        } else {
             return true;
         }
-
-
-
     }
 
     public Boolean usernameExists(String username) throws SQLException {
