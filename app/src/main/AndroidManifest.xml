@@ -53,7 +53,8 @@
 
         <activity
             android:name=".SeverityIdicator"
-            android:label="@string/title_activity_severity_idicator"></activity>
+            android:label="@string/title_activity_severity_idicator"
+            android:exported="true" ></activity>
     </application>
 
 </manifest>

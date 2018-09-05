@@ -1,14 +1,17 @@
 package t.flatearchsocie.crimeview;
 
-import android.support.v4.app.FragmentActivity;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 public class SeverityIdicator extends FragmentActivity implements OnMapReadyCallback {
 
@@ -39,8 +42,48 @@ public class SeverityIdicator extends FragmentActivity implements OnMapReadyCall
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+//        LatLng sydney = new LatLng(-33.9373, 25.5311);
+//        mMap.addMarker(new MarkerOptions().position(sydney).title("Murder"));
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+
+        Circle circle = googleMap.addCircle(new CircleOptions()
+                .center(new LatLng(-33.9373, 25.5311))
+                .radius(500)
+                .strokeColor(Color.RED)
+                .fillColor(Color.TRANSPARENT));
+
+
+
+
+
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+        //get latlong for corners for specified city
+
+        LatLng one = new LatLng(-33.9608, 25.656912);
+        LatLng two = new LatLng(-33.966667, 25.500000);
+
+
+        builder.include(one);
+        builder.include(two);
+
+        LatLngBounds bounds = builder.build();
+
+        //get width and height to current display screen
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int height = getResources().getDisplayMetrics().heightPixels;
+
+        // 20% padding
+        int padding = (int) (width * 0.40);
+
+        //set latlong bounds
+        mMap.setLatLngBoundsForCameraTarget(bounds);
+
+        //move camera to fill the bound to screen
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding));
+
+        //set zoom to level to current so that you won't be able to zoom out viz. move outside bounds
+        mMap.setMinZoomPreference(mMap.getCameraPosition().zoom);
     }
 }
