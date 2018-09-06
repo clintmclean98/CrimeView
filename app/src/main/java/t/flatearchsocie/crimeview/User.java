@@ -1,6 +1,8 @@
 package t.flatearchsocie.crimeview;
 
-class User {
+import java.io.Serializable;
+
+class User implements Serializable {
 
     private int userID;
     private String username,password, name , surname;
@@ -33,6 +35,4 @@ class User {
     public String getSurname() {
         return surname;
     }
-
-
 }

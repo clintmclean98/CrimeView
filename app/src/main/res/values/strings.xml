@@ -11,7 +11,7 @@
 
 
     <string name="hint_text">Enter a new username</string>
-
     <string name="SaveChangesButton">Save</string>
     <string name="hint_forPasswordChange">Enter new password</string>
+    <string name="title_activity_severity_idicator">Map</string>
 </resources>

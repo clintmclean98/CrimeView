@@ -4,9 +4,8 @@ package t.flatearchsocie.crimeview;
 import android.os.StrictMode;
 import android.util.Log;
 
-import java.io.Serializable;
-import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,13 +13,14 @@ import java.sql.Statement;
 import java.sql.Time;
 import java.util.ArrayList;
 
-public class DatabaseHandler implements Serializable {
+public class DatabaseHandler {
 
-    private Connection connection= null;
+    private static DatabaseHandler databaseHandler;
+    private Connection connection = null;
     private Statement preparedStatement = null;
-    private CallableStatement storedProcedure = null;
+    //private CallableStatement storedProcedure = null;
 
-    public DatabaseHandler() {
+    private DatabaseHandler() {
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -36,7 +36,15 @@ public class DatabaseHandler implements Serializable {
         }
     }
 
-    public Boolean signIn(String username, String password) throws SQLException {
+    public static DatabaseHandler getinstance() {
+
+        if (databaseHandler == null) {
+            databaseHandler = new DatabaseHandler();
+        }
+        return databaseHandler;
+    }
+
+    public Boolean signIn(String password, String username) throws SQLException {
 
         //preparedStatement = connection.prepareStatement("SELECT * FROM USERTABlE WHERE USERNAME = ? AND PASSWORD = ?");
 
@@ -44,16 +52,17 @@ public class DatabaseHandler implements Serializable {
 
         ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM USERTABLE WHERE USERNAME = '" + username + "' AND PASSWORD = '" + password + "'");
 
-        if (!resultSet.next()) {
-            return false;
-        } else {
+
+        if (resultSet.next()) {
             return true;
         }
+        return false;
     }
+
 
     public Statement getStatement() throws SQLException {
         preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        return preparedStatement ;
+        return preparedStatement;
     }
 
     public ArrayList<Crime> getCrimeDetails() throws SQLException {
@@ -73,16 +82,123 @@ public class DatabaseHandler implements Serializable {
             float latitude = resultSet.getFloat("Latitude");
             float longitude = resultSet.getFloat("Longitude");
             Boolean bool;
+            Date date = resultSet.getDate("DateRecorded");
             if (verified == 0) {
                 bool = false;
             } else {
                 bool = true;
             }
-            Crime crime = new Crime(crimeID, categoryID, locationID, userID, bool, time, latitude, longitude);
+            Crime crime = new Crime(crimeID, categoryID, locationID, userID, bool, time, latitude, longitude, date);
             crimes.add(crime);
 
         }
         return crimes;
+
+    }
+
+    public Boolean editProfile(String password, String username) throws SQLException {
+
+
+        // ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM USERTABLE WHERE USERNAME = '" + username + "' AND PASSWORD = '" + password + "'");
+
+        // String sql = " UPDATE UserTable SET Username = '" + username + "', Password = '" + password + "', UserType=1  WHERE UserID = 2 ";
+
+        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+
+
+        int resultSet = preparedStatement.executeUpdate("UPDATE UserTable SET Password = '" + password + "'  WHERE Username = '" + username + "'");
+
+
+        if (resultSet == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public Boolean usernameExists(String username) throws SQLException {
+
+        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+
+        ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM USERTABLE WHERE USERNAME = '" + username + "' ");
+        if (resultSet.getFetchSize() == 0) {
+            return true;
+        } else {
+            return false;
+        }
+
+
+    }
+
+    public String getCategory(int categoryID) throws SQLException {
+
+
+        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+
+        ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM CATEGORY WHERE CATEGORYID = " + categoryID + "");
+
+        resultSet.next();
+        return resultSet.getString("CateName");
+
+
+    }
+
+    public String getUser(int userID) throws SQLException {
+
+        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+
+        ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM USERTABLE WHERE USERID = " + userID + "");
+
+        resultSet.next();
+        return resultSet.getString("Username");
+
+
+    }
+
+    public Crime getCrime(int crimeID) throws SQLException {
+
+        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM CRIME");
+
+        Crime crime = null;
+        while (resultSet.next()) {
+
+            int categoryID = resultSet.getInt("CategoryID");
+            int locationID = resultSet.getInt("LocationID");
+            int userID = resultSet.getInt("UserID");
+            int verified = resultSet.getInt("Verified");
+            Time time = resultSet.getTime("TimeRecorded");
+            float latitude = resultSet.getFloat("Latitude");
+            float longitude = resultSet.getFloat("Longitude");
+            Boolean bool;
+            Date date = resultSet.getDate("DateRecorded");
+            if (verified == 0) {
+                bool = false;
+            } else {
+                bool = true;
+            }
+            crime = new Crime(crimeID, categoryID, locationID, userID, bool, time, latitude, longitude, date);
+
+
+        }
+        return crime;
+
+
+    }
+
+    public Boolean verifyCrime(int crimeID) throws SQLException {
+        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+
+
+        int resultSet = preparedStatement.executeUpdate("UPDATE CRIME SET VERIFIED = " + 1 + "  WHERE CRIMEID = " + crimeID + "");
+
+
+        if (resultSet == 0) {
+            return false;
+        } else {
+            return true;
+        }
+
 
     }
 

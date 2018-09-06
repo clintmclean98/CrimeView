@@ -3,11 +3,11 @@ package t.flatearchsocie.crimeview;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class DeleteCrime extends AppCompatActivity {
+public class BanUser extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_delete_crime);
+        setContentView(R.layout.activity_ban_user);
     }
 }

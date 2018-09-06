@@ -1,15 +1,20 @@
 package t.flatearchsocie.crimeview;
 
+import java.io.Serializable;
+import java.sql.Date;
 import java.sql.Time;
 
-public class Crime {
+public class Crime implements Serializable {
 
-    private int crimeID, categoryID , locationID, userID;
+    private int crimeID, categoryID, locationID, userID;
     private Boolean verified;
     private Time timeRecorded;
-    private float latitude,longitude;
+    private float latitude, longitude;
+    private Date date;
 
-    public Crime(int crimeID, int categoryID, int locationID, int userID, Boolean verified, Time timeRecorded, float latitude, float longitude) {
+
+
+    public Crime(int crimeID, int categoryID, int locationID, int userID, Boolean verified, Time timeRecorded, float latitude, float longitude , Date date) {
         this.crimeID = crimeID;
         this.categoryID = categoryID;
         this.locationID = locationID;
@@ -18,6 +23,7 @@ public class Crime {
         this.timeRecorded = timeRecorded;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.date = date;
     }
 
     public int getCrimeID() {
@@ -55,4 +61,6 @@ public class Crime {
     public void setVerified(Boolean verified) {
         this.verified = verified;
     }
+
+    public Date getDate() {return date;}
 }
