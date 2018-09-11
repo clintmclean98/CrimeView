@@ -33,7 +33,7 @@ public class BanUser extends Activity {
         setContentView(R.layout.activity_ban_user);
 
 
-        databaseHandler = DatabaseHandler.getinstance();
+        databaseHandler = DatabaseHandler.getInstance();
         connection = databaseHandler.getCon();
         fillListOfUsers();
         ArrayList<String> AL = ListOfUsers;

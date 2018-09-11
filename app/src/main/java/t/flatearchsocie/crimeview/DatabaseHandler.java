@@ -41,7 +41,7 @@ public class DatabaseHandler {
     }
 
 
-    public static DatabaseHandler getinstance() {
+    public static DatabaseHandler getInstance() {
 
         if (databaseHandler == null) {
             databaseHandler = new DatabaseHandler();
