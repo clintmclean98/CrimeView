@@ -1,10 +1,12 @@
 package t.flatearchsocie.crimeview;
 
+
 import android.os.StrictMode;
 import android.util.Log;
 import android.widget.Toast;
 import java.io.StringReader;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,8 +22,10 @@ public class DatabaseHandler {
     //private CallableStatement storedProcedure = null;
 
     private DatabaseHandler() {
+
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+
         try {
             Class.forName("net.sourceforge.jtds.jdbc.Driver");
             String connURL = "jdbc:jtds:sqlserver://openbox.nmmu.ac.za/JN07;instance=WRR";
@@ -32,35 +36,20 @@ public class DatabaseHandler {
             Log.e("SQL Error", e.getMessage());
         }
     }
-
     public Connection getCon() {
         return connection;
     }
 
-    public Connection getConnection() {
-//        try {
-//            Class.forName("net.sourceforge.jtds.jdbc.Driver");
-//            String connURL = "jdbc:jtds:sqlserver://openbox.nmmu.ac.za/JN07;instance=WRR";
-//            try {
-//                connection = DriverManager.getConnection(connURL, "JN07User", "u7WVFDBj");
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//            //  Toast.makeText(this, "Could not connect", Toast.LENGTH_LONG).show();
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
-        return connection;
-    }
 
-    public static DatabaseHandler getInstance() {
+    public static DatabaseHandler getinstance() {
+
         if (databaseHandler == null) {
             databaseHandler = new DatabaseHandler();
         }
         return databaseHandler;
     }
 
-    public Boolean signIn(String password, String username) throws SQLException {
+    public Boolean signIn(String password,String username) throws SQLException {
 
         //preparedStatement = connection.prepareStatement("SELECT * FROM USERTABlE WHERE USERNAME = ? AND PASSWORD = ?");
 
@@ -68,7 +57,8 @@ public class DatabaseHandler {
 
         ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM USERTABLE WHERE USERNAME = '" + username + "' AND PASSWORD = '" + password + "'");
 
-        if (resultSet.next()) {
+
+        if(resultSet.next()){
             return true;
         }
         return false;
@@ -80,6 +70,8 @@ public class DatabaseHandler {
     }
 
     public ArrayList<Crime> getCrimeDetails() throws SQLException {
+
+
         preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM CRIME");
         ArrayList<Crime> crimes = new ArrayList<>();
@@ -94,15 +86,18 @@ public class DatabaseHandler {
             float latitude = resultSet.getFloat("Latitude");
             float longitude = resultSet.getFloat("Longitude");
             Boolean bool;
+            Date date = resultSet.getDate("DateRecorded");
             if (verified == 0) {
                 bool = false;
             } else {
                 bool = true;
             }
-            Crime crime = new Crime(crimeID, categoryID, locationID, userID, bool, time, latitude, longitude);
+            Crime crime = new Crime(crimeID, categoryID, locationID, userID, bool, time, latitude, longitude, date);
             crimes.add(crime);
+
         }
         return crimes;
+
     }
 
     public Boolean editProfile(String password, String username) throws SQLException {
@@ -135,17 +130,19 @@ public class DatabaseHandler {
         } else {
             return false;
         }
+
+
     }
 
     public String getCategory(int categoryID) throws SQLException {
 
-        //Check Query
+
         preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 
-        ResultSet resultSet = preparedStatement.executeQuery("SELECT CATEGORYNAME FROM CATEGORY WHERE CATEGORYID = '" + categoryID + "'");
+        ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM CATEGORY WHERE CATEGORYID = " + categoryID + "");
 
-
-        return resultSet.getString(0);
+        resultSet.next();
+        return resultSet.getString("CateName");
 
 
     }
@@ -156,7 +153,10 @@ public class DatabaseHandler {
 
         ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM USERTABLE WHERE USERID = " + userID + "");
 
+        resultSet.next();
         return resultSet.getString("Username");
+
+
     }
 
 //    public User getUserObject(String username) throws SQLException {
@@ -194,12 +194,13 @@ public class DatabaseHandler {
             float latitude = resultSet.getFloat("Latitude");
             float longitude = resultSet.getFloat("Longitude");
             Boolean bool;
+            Date date = resultSet.getDate("DateRecorded");
             if (verified == 0) {
                 bool = false;
             } else {
                 bool = true;
             }
-            crime = new Crime(crimeID, categoryID, locationID, userID, bool, time, latitude, longitude);
+            crime = new Crime(crimeID, categoryID, locationID, userID, bool, time, latitude, longitude, date);
 
 
         }
@@ -238,5 +239,20 @@ public class DatabaseHandler {
         int count = resultSet.getInt("Bancode");
         return count;
     }
-    
+
+    public Boolean verifyCrime(int crimeID) throws SQLException {
+        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+
+
+        int resultSet = preparedStatement.executeUpdate("UPDATE CRIME SET VERIFIED = " + 1 + "  WHERE CRIMEID = " + crimeID + "");
+
+
+        if (resultSet == 0) {
+            return false;
+        } else {
+            return true;
+        }
+
+
+    }
 }
