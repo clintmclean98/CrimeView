@@ -1,10 +1,9 @@
 package t.flatearchsocie.crimeview;
 
-
 import android.os.StrictMode;
 import android.util.Log;
 import android.widget.Toast;
-
+import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -21,10 +20,8 @@ public class DatabaseHandler {
     //private CallableStatement storedProcedure = null;
 
     private DatabaseHandler() {
-
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-
         try {
             Class.forName("net.sourceforge.jtds.jdbc.Driver");
             String connURL = "jdbc:jtds:sqlserver://openbox.nmmu.ac.za/JN07;instance=WRR";
@@ -56,9 +53,7 @@ public class DatabaseHandler {
         return connection;
     }
 
-
-    public static DatabaseHandler getinstance() {
-
+    public static DatabaseHandler getInstance() {
         if (databaseHandler == null) {
             databaseHandler = new DatabaseHandler();
         }
@@ -73,13 +68,11 @@ public class DatabaseHandler {
 
         ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM USERTABLE WHERE USERNAME = '" + username + "' AND PASSWORD = '" + password + "'");
 
-
         if (resultSet.next()) {
             return true;
         }
         return false;
     }
-
 
     public Statement getStatement() throws SQLException {
         preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -87,8 +80,6 @@ public class DatabaseHandler {
     }
 
     public ArrayList<Crime> getCrimeDetails() throws SQLException {
-
-
         preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM CRIME");
         ArrayList<Crime> crimes = new ArrayList<>();
@@ -110,10 +101,8 @@ public class DatabaseHandler {
             }
             Crime crime = new Crime(crimeID, categoryID, locationID, userID, bool, time, latitude, longitude);
             crimes.add(crime);
-
         }
         return crimes;
-
     }
 
     public Boolean editProfile(String password, String username) throws SQLException {
@@ -168,8 +157,6 @@ public class DatabaseHandler {
         ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM USERTABLE WHERE USERID = " + userID + "");
 
         return resultSet.getString("Username");
-
-
     }
 
 //    public User getUserObject(String username) throws SQLException {
@@ -221,8 +208,35 @@ public class DatabaseHandler {
 
     }
 
-    public void BanUser(){
-      String sql="  INSERT INTO DeletedUser (Name, Surname) SELECT Name, Surname FROM UserTable WHERE UserName = ";
+    public void BanUser(String username, int count) throws SQLException {
+
+        String sql = " SET IDENTITY_INSERT DeletedUser ON\n" +
+                "INSERT INTO DeletedUser ( UserID, Name, Surname, Bancode)" +
+                " SELECT UserID,  Name, Surname, " + count + " FROM UserTable WHERE UserName = '" + username + "'\n" +
+                "SET IDENTITY_INSERT DeletedUser OFF  ";
+        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        int resultSet = preparedStatement.executeUpdate(sql);
+        if (resultSet == 0) {
+            System.out.println("Test console");
+        }
     }
 
+    public void addBanReason(String reason, String username) throws SQLException {
+        String sql = "INSERT INTO BanReasons(Description) VALUES('" + reason + "')";
+        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        int resultSet = preparedStatement.executeUpdate(sql);
+        if (resultSet == 1) {
+           int p = co(reason);
+            BanUser(username,p);
+        }
+    }
+
+    public int co(String reason) throws SQLException {
+        String sql2 = "SELECT * FROM BanReasons WHERE Description='" + reason + "'";
+        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        ResultSet resultSet = preparedStatement.executeQuery(sql2);
+        int count = resultSet.getInt("Bancode");
+        return count;
+    }
+    
 }
