@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -59,8 +60,8 @@ public class BanReasons extends AppCompatActivity {
     }
 
     public void proceedButton() throws SQLException {
-        databaseHandler.addBanReason(reason, userName);
-
+        databaseHandler.BanUser(userName, reason);
+        Toast.makeText(this,userName +" has been banned", Toast.LENGTH_LONG).show();
     }
 
 }

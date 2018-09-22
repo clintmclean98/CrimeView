@@ -17,7 +17,7 @@ public class ManageCrime extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_crime);
-        databaseHandler = DatabaseHandler.getinstance();
+        databaseHandler = DatabaseHandler.getInstance();
         try {
             populateCrimes();
         } catch (SQLException e) {

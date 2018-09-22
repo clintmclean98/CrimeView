@@ -26,7 +26,7 @@ public class EditProfile extends Activity {
         username = intent.getStringExtra("user");
         EditText txtView = findViewById(R.id.nameChange);
         txtView.setText(username);
-        databaseHandler = DatabaseHandler.getinstance();
+        databaseHandler = DatabaseHandler.getInstance();
     }
 
 

@@ -43,7 +43,7 @@ public class Login extends AppCompatActivity {
 
         EditText username = findViewById(R.id.edtLogin);
         EditText password = findViewById(R.id.edtPassword);
-        databaseHandler = DatabaseHandler.getinstance();
+        databaseHandler = DatabaseHandler.getInstance();
         User user = null;
         try {
             if (databaseHandler.signIn( password.getText().toString() , username.getText().toString())) {

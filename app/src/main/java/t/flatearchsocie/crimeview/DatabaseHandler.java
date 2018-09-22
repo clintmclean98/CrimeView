@@ -55,7 +55,7 @@ public class DatabaseHandler {
 
         preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 
-        ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM USERTABLE WHERE USERNAME = '" + username + "' AND PASSWORD = '" + password + "'");
+        ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM USERTABLE WHERE USERNAME = '" + username + "' AND PASSWORD = '" + password + "' AND isBanned = 'False' ");
 
 
         if(resultSet.next()){
@@ -159,6 +159,16 @@ public class DatabaseHandler {
 
     }
 
+    public int getUserID(String Username) throws SQLException {
+        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        String sql = "SELECT * FROM USERTABLE WHERE Username = '" + Username + "' AND isBanned = 'False' ";
+        ResultSet resultSet = preparedStatement.executeQuery(sql);
+        int userID = -1;
+        while (resultSet.next()) {
+            userID = resultSet.getInt("UserID");
+        }
+        return userID;
+    }
 //    public User getUserObject(String username) throws SQLException {
 //        String sql = "Select * From UserTable Where Username = '" + username +"'" ;
 //        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -209,44 +219,64 @@ public class DatabaseHandler {
 
     }
 
-    public void BanUser(String username, int count) throws SQLException {
+//    public void BanUser(String username, int count) throws SQLException {
+//
+//        String sql = " SET IDENTITY_INSERT DeletedUser ON\n" +
+//                "INSERT INTO DeletedUser ( UserID, Name, Surname, Bancode)" +
+//                " SELECT UserID,  Name, Surname, " + count + " FROM UserTable WHERE UserName = '" + username + "'\n" +
+//                "SET IDENTITY_INSERT DeletedUser OFF  ";
+//        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+//        int resultSet = preparedStatement.executeUpdate(sql);
+//        if (resultSet == 0) {
+//            System.out.println("Test console");
+//        }
+//    }
 
-        String sql = " SET IDENTITY_INSERT DeletedUser ON\n" +
-                "INSERT INTO DeletedUser ( UserID, Name, Surname, Bancode)" +
-                " SELECT UserID,  Name, Surname, " + count + " FROM UserTable WHERE UserName = '" + username + "'\n" +
-                "SET IDENTITY_INSERT DeletedUser OFF  ";
-        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        int resultSet = preparedStatement.executeUpdate(sql);
-        if (resultSet == 0) {
-            System.out.println("Test console");
-        }
-    }
-
-    public void addBanReason(String reason, String username) throws SQLException {
-        String sql = "INSERT INTO BanReasons(Description) VALUES('" + reason + "')";
+    public void BanUser(String username, String Reason) throws SQLException {
+        String sql = " SET IDENTITY_INSERT DeletedUser ON INSERT INTO DeletedUser ( UserID, Name, Surname) SELECT UserID,  Name, Surname FROM UserTable WHERE UserName = '" + username + "' SET IDENTITY_INSERT DeletedUser OFF";
         preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         int resultSet = preparedStatement.executeUpdate(sql);
         if (resultSet == 1) {
-           int p = co(reason);
-            BanUser(username,p);
+            System.out.println("Test console");
+            addBanReason(username, Reason);
         }
     }
 
-    public int co(String reason) throws SQLException {
-        String sql2 = "SELECT * FROM BanReasons WHERE Description='" + reason + "'";
+
+//    public void addBanReason(String reason, String username) throws SQLException {
+//        String sql = "INSERT INTO BanReasons(Description) VALUES('" + reason + "')";
+//        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+//        int resultSet = preparedStatement.executeUpdate(sql);
+//        if (resultSet == 1) {
+//           int p = co(reason);
+//            BanUser(username,p);
+//        }
+//    }
+
+    public void addBanReason(String username, String reason) throws SQLException {
+        int curUserID = getUserID(username);
+        String sql = "INSERT INTO DeletedUser(Reason) VALUES('" + reason + "') WHERE UserID = '" + curUserID + "' ";
+        String correctSQL = "UPDATE DeletedUser SET Reason = '"+ reason +"' WHERE UserID = '"+curUserID +"'";
         preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        ResultSet resultSet = preparedStatement.executeQuery(sql2);
-        int count = resultSet.getInt("Bancode");
-        return count;
+        int resultSet = preparedStatement.executeUpdate(correctSQL);
+        if (resultSet == 1) {
+            isBannedChange(username);
+        }
+    }
+
+    public void isBannedChange(String userName) throws SQLException {
+        String sql = "UPDATE UserTable SET isBanned = 'True' WHERE UserName = '"+ userName +"'";
+        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        int resultSet = preparedStatement.executeUpdate(sql);
+        if (resultSet == 1) {
+
+            // Toast.makeText(,"Banned Successfully", Toast.LENGTH_LONG).show();
+        }
     }
 
     public Boolean verifyCrime(int crimeID) throws SQLException {
         preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-
-
         int resultSet = preparedStatement.executeUpdate("UPDATE CRIME SET VERIFIED = " + 1 + "  WHERE CRIMEID = " + crimeID + "");
-
-
         if (resultSet == 0) {
             return false;
         } else {

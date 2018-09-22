@@ -32,7 +32,6 @@ public class BanUser extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ban_user);
 
-
         databaseHandler = DatabaseHandler.getInstance();
         connection = databaseHandler.getCon();
         fillListOfUsers();
@@ -46,7 +45,7 @@ public class BanUser extends Activity {
         if (connection == null) {
             Toast.makeText(this, "Could not get connection", Toast.LENGTH_LONG).show();
         }
-        String sql = "Select * From UserTable";
+        String sql = "Select * From UserTable WHERE isBanned = 'False'";
         try {
             preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             resultSet = preparedStatement.executeQuery(sql);
@@ -66,7 +65,6 @@ public class BanUser extends Activity {
 
     }
 
-
     public void populateListView() {
 
         ListAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, ListOfUsers);
@@ -78,7 +76,6 @@ public class BanUser extends Activity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         String userName = String.valueOf(parent.getItemAtPosition(position));
-
                         Intent intent = new Intent(getApplication(), BanReasons.class);
                         intent.putExtra("nameOfUser", userName);
                         startActivity(intent);
