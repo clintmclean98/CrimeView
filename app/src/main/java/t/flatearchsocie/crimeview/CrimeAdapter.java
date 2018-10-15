@@ -24,7 +24,7 @@ public class CrimeAdapter extends ArrayAdapter<Crime> {
 
         View personView = inflater.inflate(R.layout.individual_crime_layout, parent, false);
 
-        DatabaseHandler databaseHandler = DatabaseHandler.getinstance();
+        DatabaseHandler databaseHandler = DatabaseHandler.getInstance();
         // keep track of person this view is working with
         personView.setTag(getItem(position));
 

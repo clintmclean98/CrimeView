@@ -7,6 +7,7 @@
     tools:context=".BanUser">
 
     <ListView
+        android:id="@+id/ListViewOfUser"
         android:layout_width="369dp"
         android:layout_height="428dp"
         android:layout_marginBottom="8dp"
@@ -24,10 +25,15 @@
         android:id="@+id/textView2"
         android:layout_width="367dp"
         android:layout_height="55dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:text="User"
+        android:layout_marginTop="8dp"
+        android:text="Click on the user you to ban"
+        app:layout_constraintBottom_toTopOf="@+id/ListViewOfUser"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="12dp" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 </android.support.constraint.ConstraintLayout>

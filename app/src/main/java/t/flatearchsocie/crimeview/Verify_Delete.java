@@ -19,7 +19,7 @@ public class Verify_Delete extends AppCompatActivity {
         setContentView(R.layout.activity_verify__delete);
         Intent intent = getIntent();
         crime = (Crime) intent.getSerializableExtra("crime");
-        databaseHandler = DatabaseHandler.getinstance();
+        databaseHandler = DatabaseHandler.getInstance();
         try {
             populateUI();
         } catch (SQLException e) {
