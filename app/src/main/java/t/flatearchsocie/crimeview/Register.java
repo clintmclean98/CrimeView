@@ -26,7 +26,7 @@ public class Register extends AppCompatActivity {
         TextView txtcPassword = findViewById(R.id.txtCPassword);
         String cpass= txtcPassword.getText().toString();
 
-        if(!dbHandler.usernameExists()){
+        if(!dbHandler.usernameExists(userID)){
             Toast.makeText(Register.this,"Invalid Email Address",Toast.LENGTH_SHORT).show();
             temp=false;
         }

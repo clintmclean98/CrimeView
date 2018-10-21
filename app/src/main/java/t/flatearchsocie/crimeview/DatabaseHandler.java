@@ -68,6 +68,35 @@ public class DatabaseHandler {
         preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         return preparedStatement;
     }
+    public ArrayList<Crime> getUserCrimes(int ID) throws SQLException {
+
+
+        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM CRIME WHERE UserID =" +ID);
+        ArrayList<Crime> crimes = new ArrayList<>();
+
+        while (resultSet.next()) {
+            int crimeID = resultSet.getInt("CrimeID");
+            int categoryID = resultSet.getInt("CategoryID");
+            int locationID = resultSet.getInt("LocationID");
+            int userID = resultSet.getInt("UserID");
+            int verified = resultSet.getInt("Verified");
+            Time time = resultSet.getTime("TimeRecorded");
+            float latitude = resultSet.getFloat("Latitude");
+            float longitude = resultSet.getFloat("Longitude");
+            Boolean bool;
+            Date date = resultSet.getDate("DateRecorded");
+            if (verified == 0) {
+                bool = false;
+            } else {
+                bool = true;
+            }
+            Crime crime = new Crime(crimeID, categoryID, locationID, userID, bool, time, latitude, longitude, date);
+            crimes.add(crime);
+
+        }
+        return crimes;
+    }
 
     public ArrayList<Crime> getCrimeDetails() throws SQLException {
 
@@ -98,6 +127,25 @@ public class DatabaseHandler {
         }
         return crimes;
 
+    }
+    public ArrayList<User> getUserDetails() throws SQLException {
+
+
+        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM USERS");
+        ArrayList<User> users = new ArrayList<>();
+
+        while (resultSet.next()) {
+            int userID = resultSet.getInt("UserID");
+            String username = resultSet.getString("Username");
+            String password = resultSet.getString("Password");
+            String name = resultSet.getString("Name");
+            String surname = resultSet.getString("Surname");
+            User user = new User(userID, username, password, name, surname);
+            users.add(user);
+
+        }
+        return users;
     }
 
     public Boolean editProfile(String password, String username) throws SQLException {
