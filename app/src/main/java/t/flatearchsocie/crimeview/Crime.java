@@ -12,9 +12,17 @@ public class Crime implements Serializable {
     private float latitude, longitude;
     private Date date;
 
+    public Crime(int crimeID, int categoryID, int locationID, int userID, Boolean verified, Time timeRecorded,Date date) {
+        this.crimeID = crimeID;
+        this.categoryID = categoryID;
+        this.locationID = locationID;
+        this.userID = userID;
+        this.verified = verified;
+        this.timeRecorded = timeRecorded;
+        this.date = date;
+    }
 
-
-    public Crime(int crimeID, int categoryID, int locationID, int userID, Boolean verified, Time timeRecorded, float latitude, float longitude , Date date) {
+    public Crime(int crimeID, int categoryID, int locationID, int userID, Boolean verified, Time timeRecorded, float latitude, float longitude, Date date) {
         this.crimeID = crimeID;
         this.categoryID = categoryID;
         this.locationID = locationID;
@@ -62,5 +70,7 @@ public class Crime implements Serializable {
         this.verified = verified;
     }
 
-    public Date getDate() {return date;}
+    public Date getDate() {
+        return date;
+    }
 }

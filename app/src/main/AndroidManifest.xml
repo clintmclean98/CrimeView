@@ -37,9 +37,7 @@
         <activity
             android:name=".BanUser"
             android:exported="true" />
-
-        <activity android:name=".BanReasons"></activity>
-
+        <activity android:name=".BanReasons" />
         <activity
             android:name=".Verify_Delete"
             android:parentActivityName=".ManageCrime" />
@@ -58,8 +56,11 @@
 
         <activity
             android:name=".SeverityIdicator"
-            android:label="@string/title_activity_severity_idicator"
-            android:exported="true" ></activity>
+            android:exported="true"
+            android:label="@string/title_activity_severity_idicator" />
+        <activity
+            android:name=".ViewCrimesByArea"
+            android:exported="true"/>
     </application>
 
 </manifest>

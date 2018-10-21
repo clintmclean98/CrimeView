@@ -36,10 +36,10 @@ public class DatabaseHandler {
             Log.e("SQL Error", e.getMessage());
         }
     }
+
     public Connection getCon() {
         return connection;
     }
-
 
     public static DatabaseHandler getInstance() {
 
@@ -169,6 +169,7 @@ public class DatabaseHandler {
         }
         return userID;
     }
+
 //    public User getUserObject(String username) throws SQLException {
 //        String sql = "Select * From UserTable Where Username = '" + username +"'" ;
 //        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -195,7 +196,6 @@ public class DatabaseHandler {
 
         Crime crime = null;
         while (resultSet.next()) {
-
             int categoryID = resultSet.getInt("CategoryID");
             int locationID = resultSet.getInt("LocationID");
             int userID = resultSet.getInt("UserID");
@@ -211,12 +211,8 @@ public class DatabaseHandler {
                 bool = true;
             }
             crime = new Crime(crimeID, categoryID, locationID, userID, bool, time, latitude, longitude, date);
-
-
         }
         return crime;
-
-
     }
 
 //    public void BanUser(String username, int count) throws SQLException {
@@ -241,7 +237,6 @@ public class DatabaseHandler {
             addBanReason(username, Reason);
         }
     }
-
 
 //    public void addBanReason(String reason, String username) throws SQLException {
 //        String sql = "INSERT INTO BanReasons(Description) VALUES('" + reason + "')";
@@ -269,8 +264,6 @@ public class DatabaseHandler {
         preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         int resultSet = preparedStatement.executeUpdate(sql);
         if (resultSet == 1) {
-
-            // Toast.makeText(,"Banned Successfully", Toast.LENGTH_LONG).show();
         }
     }
 
