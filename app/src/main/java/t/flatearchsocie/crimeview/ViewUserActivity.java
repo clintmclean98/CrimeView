@@ -138,7 +138,7 @@ TextView username, firstname, surname;
             tr.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent myIntent = new Intent(this, UserActivityProfile.class);
+                    Intent myIntent = new Intent(getApplicationContext(), UserActivityProfile.class);
                     myIntent.putExtra("username", userID);
                     startActivity(myIntent);
                 }
