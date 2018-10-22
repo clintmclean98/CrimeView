@@ -3,8 +3,7 @@ package t.flatearchsocie.crimeview;
 
 import android.os.StrictMode;
 import android.util.Log;
-import android.widget.Toast;
-import java.io.StringReader;
+
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -14,7 +13,7 @@ import java.sql.Statement;
 import java.sql.Time;
 import java.util.ArrayList;
 
-public class DatabaseHandler {
+public class DatabaseHandler{
 
     private static DatabaseHandler databaseHandler;
     private Connection connection = null;
@@ -36,10 +35,10 @@ public class DatabaseHandler {
             Log.e("SQL Error", e.getMessage());
         }
     }
-
     public Connection getCon() {
         return connection;
     }
+
 
     public static DatabaseHandler getInstance() {
 
@@ -73,7 +72,7 @@ public class DatabaseHandler {
 
 
         preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM CRIME");
+        ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM CRIME , CATEGORY , LOCATION WHERE CRIME.LOCATIONID = LOCATION.LOCATIONID AND CRIME.CATEGORYID = CATEGORY.CATEGORYID");
         ArrayList<Crime> crimes = new ArrayList<>();
 
         while (resultSet.next()) {
@@ -83,8 +82,7 @@ public class DatabaseHandler {
             int userID = resultSet.getInt("UserID");
             int verified = resultSet.getInt("Verified");
             Time time = resultSet.getTime("TimeRecorded");
-            float latitude = resultSet.getFloat("Latitude");
-            float longitude = resultSet.getFloat("Longitude");
+
             Boolean bool;
             Date date = resultSet.getDate("DateRecorded");
             if (verified == 0) {
@@ -92,13 +90,17 @@ public class DatabaseHandler {
             } else {
                 bool = true;
             }
-            Crime crime = new Crime(crimeID, categoryID, locationID, userID, bool, time, latitude, longitude, date);
+            Crime crime = new Crime(crimeID, categoryID, locationID, userID, bool, time, date);
             crimes.add(crime);
+            crime.setLocation(resultSet.getString("Suburb"));
+            crime.setSeverity(resultSet.getInt("SeverityIndicator"));
 
         }
         return crimes;
 
     }
+
+
 
     public Boolean editProfile(String password, String username) throws SQLException {
 
@@ -169,7 +171,6 @@ public class DatabaseHandler {
         }
         return userID;
     }
-
 //    public User getUserObject(String username) throws SQLException {
 //        String sql = "Select * From UserTable Where Username = '" + username +"'" ;
 //        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -196,13 +197,13 @@ public class DatabaseHandler {
 
         Crime crime = null;
         while (resultSet.next()) {
+
             int categoryID = resultSet.getInt("CategoryID");
             int locationID = resultSet.getInt("LocationID");
             int userID = resultSet.getInt("UserID");
             int verified = resultSet.getInt("Verified");
             Time time = resultSet.getTime("TimeRecorded");
-            float latitude = resultSet.getFloat("Latitude");
-            float longitude = resultSet.getFloat("Longitude");
+
             Boolean bool;
             Date date = resultSet.getDate("DateRecorded");
             if (verified == 0) {
@@ -210,9 +211,13 @@ public class DatabaseHandler {
             } else {
                 bool = true;
             }
-            crime = new Crime(crimeID, categoryID, locationID, userID, bool, time, latitude, longitude, date);
+            crime = new Crime(crimeID, categoryID, locationID, userID, bool, time,  date);
+
+
         }
         return crime;
+
+
     }
 
 //    public void BanUser(String username, int count) throws SQLException {
@@ -237,6 +242,7 @@ public class DatabaseHandler {
             addBanReason(username, Reason);
         }
     }
+
 
 //    public void addBanReason(String reason, String username) throws SQLException {
 //        String sql = "INSERT INTO BanReasons(Description) VALUES('" + reason + "')";
@@ -264,18 +270,83 @@ public class DatabaseHandler {
         preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         int resultSet = preparedStatement.executeUpdate(sql);
         if (resultSet == 1) {
+
+            // Toast.makeText(,"Banned Successfully", Toast.LENGTH_LONG).show();
         }
     }
 
     public Boolean verifyCrime(int crimeID) throws SQLException {
+
         preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         int resultSet = preparedStatement.executeUpdate("UPDATE CRIME SET VERIFIED = " + 1 + "  WHERE CRIMEID = " + crimeID + "");
-        if (resultSet == 0) {
-            return false;
-        } else {
-            return true;
-        }
+        if (resultSet == 0 ){return true;}
+        else return true;
+
 
 
     }
+
+    public ArrayList<String> getAreas() throws SQLException {
+
+
+        ArrayList<String> areas = new ArrayList();
+
+        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+
+        ResultSet resultSet = preparedStatement.executeQuery("SELECT SUBURB FROM LOCATION");
+
+        while(resultSet.next()){
+
+
+            String area = resultSet.getString("SUBURB");
+            areas.add(area);
+
+        }
+
+
+        return areas;
+
+    }
+
+    public ArrayList<Location> getLocations() throws SQLException{
+
+
+        ArrayList<Location> areas = new ArrayList();
+
+        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+
+        ResultSet resultSet = preparedStatement.executeQuery("SELECT * FROM LOCATION");
+
+        while(resultSet.next()){
+
+
+            String area = resultSet.getString("SUBURB");
+            float Lat = resultSet.getFloat("Latitude");
+            float Long = resultSet.getFloat("Longitude");
+
+            areas.add(new Location(area , Lat , Long));
+
+        }
+
+        return areas;
+    }
+
+
+    public Boolean deleteCrime(int CrimeID) throws SQLException {
+
+
+        preparedStatement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+
+
+
+            ResultSet resultSet = preparedStatement.executeQuery("DELETE FROM CRIME WHERE CRIMEID = " + CrimeID + "");
+            return true;
+
+
+
+
+
+
+    }
+
 }

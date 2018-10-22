@@ -19,24 +19,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <service
-            android:name=".MyFirebaseInstanceIdService"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
-            </intent-filter>
-        </service>
-
-        <service
-            android:name=".MyFirebaseMessagingService"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
-            </intent-filter>
-        </service>
-
-
         <activity android:name=".Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -55,7 +37,9 @@
         <activity
             android:name=".BanUser"
             android:exported="true" />
-        <activity android:name=".BanReasons" />
+
+        <activity android:name=".BanReasons"></activity>
+
         <activity
             android:name=".Verify_Delete"
             android:parentActivityName=".ManageCrime" />
@@ -74,11 +58,14 @@
 
         <activity
             android:name=".SeverityIdicator"
+            android:label="@string/title_activity_severity_idicator"
+            android:exported="true" ></activity>
+
+        <activity android:name=".ViewCrimesByArea"
             android:exported="true"
-            android:label="@string/title_activity_severity_idicator" />
-        <activity
-            android:name=".ViewCrimesByArea"
-            android:exported="true"/>
+            android:label="@string/app_name"></activity>
+
+
     </application>
 
 </manifest>

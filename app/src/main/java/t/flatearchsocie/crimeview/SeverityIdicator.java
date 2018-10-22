@@ -1,11 +1,13 @@
 package t.flatearchsocie.crimeview;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnCircleClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.Circle;
@@ -13,10 +15,15 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import static android.graphics.Color.TRANSPARENT;
+
 public class SeverityIdicator extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-
+DatabaseHandler databaseHandler ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +32,11 @@ public class SeverityIdicator extends FragmentActivity implements OnMapReadyCall
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
+
+
+
     }
 
 
@@ -41,17 +53,129 @@ public class SeverityIdicator extends FragmentActivity implements OnMapReadyCall
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+
+        databaseHandler = DatabaseHandler.getInstance();
+
+        try {
+            ArrayList<Location> locations = databaseHandler.getLocations();
+            ArrayList<Crime> crimes = databaseHandler.getCrimeDetails();
+
+
+            for (Crime cur: crimes ) {
+
+                for (Location curLoc: locations) {
+
+                    if (curLoc.getSuburb().equals(cur.getLocation())) {
+                        curLoc.increaseCount();
+                        curLoc.increaseSeverity(cur.getSeverity());
+                        break;
+                    }
+                }
+            }
+
+            for (Location cur: locations) {
+
+
+
+                int[] colors = {
+                        Color.argb(0, 0, 255, 255),// transparent
+                        Color.argb(255 / 3 * 2, 0, 255, 255),
+                        Color.rgb(0, 191, 255),
+                        Color.rgb(0, 0, 127),
+                        Color.rgb(255, 0, 0)
+                };
+
+                float[] startPoints = {
+                        0.0f, 0.10f, 0.20f, 0.60f, 1.0f
+                };
+
+
+
+// Create the tile provider.
+
+
+// Add the tile overlay to the map.
+
+
+
+
+                if (cur.AverageSeverity() <= 2) {
+                    Circle circle = googleMap.addCircle(new CircleOptions()
+                            .center(new LatLng(cur.getLatitude(), cur.getLongitude()))
+                            .radius(500)
+                            .strokeColor(Color.GREEN)
+                            .fillColor(TRANSPARENT));
+                    circle.setClickable(true);
+                }
+
+                else if (cur.AverageSeverity() >= 4) {
+                    Circle circle = googleMap.addCircle(new CircleOptions()
+                            .center(new LatLng(cur.getLatitude(), cur.getLongitude()))
+                            .radius(500)
+                            .strokeColor(Color.RED)
+                            .fillColor(TRANSPARENT));
+                circle.setClickable(true);
+
+                }
+
+
+                else {
+                    Circle circle = googleMap.addCircle(new CircleOptions()
+                            .center(new LatLng(cur.getLatitude(), cur.getLongitude()))
+                            .radius(500)
+                            .strokeColor(Color.YELLOW)
+                            .fillColor(TRANSPARENT));
+                    circle.setClickable(true);
+
+
+                }
+mMap.setOnCircleClickListener(new OnCircleClickListener() {
+    @Override
+    public void onCircleClick(Circle circle) {
+        LatLng latLng = circle.getCenter();
+        Intent intent = new Intent(getApplicationContext() , ViewCrimesByArea.class);
+        startActivity(intent);
+
+
+    }
+});
+
+               /* HeatmapTileProvider mProvider = new HeatmapTileProvider.Builder()
+                        .data(Collections.singleton(new LatLng((double) cur.getLatitude(), (double) cur.getLongitude())))
+                        .gradient(gradient)
+                        .build();
+                TileOverlay mOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));*/
+
+            }
+
+
+
+
+
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         // Add a marker in Sydney and move the camera
-//        LatLng sydney = new LatLng(-33.9373, 25.5311);
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Murder"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
 
-        Circle circle = googleMap.addCircle(new CircleOptions()
-                .center(new LatLng(-33.9373, 25.5311))
-                .radius(500)
-                .strokeColor(Color.RED)
-                .fillColor(Color.TRANSPARENT));
 
 
 
@@ -61,8 +185,8 @@ public class SeverityIdicator extends FragmentActivity implements OnMapReadyCall
 
         //get latlong for corners for specified city
 
-        LatLng one = new LatLng(-33.9608, 25.656912);
-        LatLng two = new LatLng(-33.966667, 25.500000);
+        LatLng one = new LatLng(-33.7999417, 25.2572868 );
+        LatLng two = new LatLng(-33.9607324d, 25.6022644);
 
 
         builder.include(one);
@@ -75,7 +199,7 @@ public class SeverityIdicator extends FragmentActivity implements OnMapReadyCall
         int height = getResources().getDisplayMetrics().heightPixels;
 
         // 20% padding
-        int padding = (int) (width * 0.40);
+        int padding = (int) (width * 0.2);
 
         //set latlong bounds
         mMap.setLatLngBoundsForCameraTarget(bounds);
@@ -86,4 +210,7 @@ public class SeverityIdicator extends FragmentActivity implements OnMapReadyCall
         //set zoom to level to current so that you won't be able to zoom out viz. move outside bounds
         mMap.setMinZoomPreference(mMap.getCameraPosition().zoom);
     }
+
+
+
 }

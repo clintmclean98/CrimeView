@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +21,29 @@ public class Verify_Delete extends AppCompatActivity {
         Intent intent = getIntent();
         crime = (Crime) intent.getSerializableExtra("crime");
         databaseHandler = DatabaseHandler.getInstance();
+        Button btnDelete = findViewById(R.id.btnDeleteCrime);
+        Button btnVerify = findViewById(R.id.btnVerifyCrime);
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    deleteCrime(v);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        btnVerify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    verifyCrime(v);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         try {
             populateUI();
         } catch (SQLException e) {
@@ -55,7 +79,18 @@ public class Verify_Delete extends AppCompatActivity {
     }
 
 
-    public void deleteCrime(View view) {
+    public void deleteCrime(View view) throws SQLException {
+
+        if (databaseHandler.deleteCrime(crime.getCrimeID())) {
+            Toast.makeText(getApplicationContext() , "Crime Deleted" , Toast.LENGTH_LONG);
+            Intent intent = new Intent(getApplicationContext() , ManageCrime.class);
+            startActivity(intent);
+        }
+
+
+
+
+
 
 
     }
@@ -63,15 +98,12 @@ public class Verify_Delete extends AppCompatActivity {
     public void verifyCrime(View view) throws SQLException {
 
 
-        //Check why it doesn't toast
+
 
         if (databaseHandler.verifyCrime(crime.getCrimeID())) {
 
             Toast.makeText(getApplicationContext(), "Crime Verified", Toast.LENGTH_LONG);
             crime.setVerified(true);
-        } else {
-
-            Toast.makeText(getApplicationContext(), "Crime Verification failed", Toast.LENGTH_LONG);
         }
 
 
