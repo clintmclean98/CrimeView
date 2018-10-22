@@ -90,7 +90,7 @@ public class DatabaseHandler{
             } else {
                 bool = true;
             }
-            Crime crime = new Crime(crimeID, categoryID, locationID, userID, bool, time, latitude, longitude, date);
+            Crime crime = new Crime(crimeID, categoryID, locationID, userID, bool, time, date);
             crimes.add(crime);
 
         }
