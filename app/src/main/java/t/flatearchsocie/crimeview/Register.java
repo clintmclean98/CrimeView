@@ -16,6 +16,7 @@ public class Register extends AppCompatActivity {
     }
     //use an intent to parse info to next screen
     private boolean validate() {
+
         boolean temp=true;
         TextView txtPassword = findViewById(R.id.txtPassword); //How to get something from the screen.
         String pass= txtPassword.getText().toString(); //Convert it so it can be used.
