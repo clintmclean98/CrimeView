@@ -27,7 +27,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             mChannel.enableLights(true);
             mChannel.setLightColor(Color.RED);
             mChannel.enableVibration(true);
-            //    mChannel.setVibrationPattern(new long[](100,200,300));
+            //mChannel.setVibrationPattern(new long[](100,200,300));
             notificationManager.createNotificationChannel(mChannel);
         }
     }
