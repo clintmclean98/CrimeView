@@ -26,6 +26,7 @@ public class BanUser extends Activity {
     private Statement preparedStatement = null;
     ResultSet resultSet = null;
     ArrayList<String> ListOfUsers = new ArrayList<>();
+    String Suburb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +41,7 @@ public class BanUser extends Activity {
     }
 
     public void fillListOfUsers() {
-
-       // connection = databaseHandler.getConnection();
+        // connection = databaseHandler.getConnection();
         if (connection == null) {
             Toast.makeText(this, "Could not get connection", Toast.LENGTH_LONG).show();
         }
@@ -54,7 +54,6 @@ public class BanUser extends Activity {
             e.printStackTrace();
         }
         try {
-
             while (resultSet.next()) {
                 String userName = resultSet.getString("Username");
                 ListOfUsers.add(userName);
@@ -62,8 +61,8 @@ public class BanUser extends Activity {
         } catch (Exception e) {
             Toast.makeText(this, "Could not process resultSet", Toast.LENGTH_LONG).show();
         }
-
     }
+
 
     public void populateListView() {
 
@@ -79,7 +78,6 @@ public class BanUser extends Activity {
                         Intent intent = new Intent(getApplication(), BanReasons.class);
                         intent.putExtra("nameOfUser", userName);
                         startActivity(intent);
-
                         // Toast.makeText(BanUser.this, userName, Toast.LENGTH_LONG).show();
                     }
                 }
@@ -87,7 +85,6 @@ public class BanUser extends Activity {
     }
 
     public void createConnection() {
-
         try {
             Class.forName("net.sourceforge.jtds.jdbc.Driver");
             String connURL = "jdbc:jtds:sqlserver://openbox.nmmu.ac.za/JN07;instance=WRR";

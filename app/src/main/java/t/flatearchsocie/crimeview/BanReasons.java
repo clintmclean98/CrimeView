@@ -15,7 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class BanReasons extends AppCompatActivity {
-
+// implementation 'com.google.android.gms:play-services-maps:15.0.1'
     TextView test;
     DatabaseHandler databaseHandler;
     private Connection connection = null;

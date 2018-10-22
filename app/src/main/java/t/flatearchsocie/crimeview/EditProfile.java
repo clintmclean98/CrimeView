@@ -31,16 +31,15 @@ public class EditProfile extends Activity {
 
 
     public Integer getUserId() {
-
         return null;
     }
 
     public void editProfileSQL(View view) {
         EditText edtTextUsername = findViewById(R.id.nameChange);
         EditText edtTextPassword = findViewById(R.id.surnameChange);
-        //Integer UserID = 2;
-       // username = edtTextUsername.getText().toString();
-       password = edtTextPassword.getText().toString();
+        // Integer UserID = 2;
+        // username = edtTextUsername.getText().toString();
+        password = edtTextPassword.getText().toString();
 
 
         String Name = "Clint";
